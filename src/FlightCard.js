@@ -129,15 +129,26 @@ export default function FlightCard({ data, index }) {
           <Typography>{getCostFormat(data.cost)}</Typography>
           <Typography variant="caption">{data.flightClass}</Typography>
         </Grid>
-        <Grid item xs={2} justifyContent={'flex-end'} display={'flex'}>
+        <Grid item xs={2} gap={1} justifyContent={'flex-end'} display={'flex'} direction={'column'}>
           <Button
             variant="contained"
             color="secondary"
+            size='small'
             onClick={() => {
               setCurrentFlight(data);
               setOpen(true);
             }}>
             Freeze Price
+          </Button>
+          <Button
+            variant="contained"
+            // color="warning"
+            size='small'
+            onClick={() => {
+              setCurrentFlight(data);
+              setOpen(true);
+            }}>
+            Book Flight
           </Button>
         </Grid>
       </Grid>
