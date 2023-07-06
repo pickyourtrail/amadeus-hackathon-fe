@@ -4,8 +4,10 @@ import {
   Button,
   FormControl,
   Grid,
+  LinearProgress,
   MenuItem,
   Select,
+  Skeleton,
   TextField,
   Typography,
   colors,
@@ -33,11 +35,16 @@ const countries = [
 ];
 
 import _CALENDAR_PRICE from '../src/data/latest-price.json';
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import dayjs from 'dayjs';
 import getCostFormat from './getCostFormat';
 
-export default function FlightSearchBar({ onSearch }) {
+export default function FlightSearchBar({
+  onSearch,
+  showPriceIndicator,
+  showFlights,
+  flightsData,
+}) {
   const [flightSearch, setFlightSearch] = useAtom(flightSearchAtom);
 
   const handleChangeType = event => {
@@ -64,6 +71,24 @@ export default function FlightSearchBar({ onSearch }) {
     });
 
     return finalList;
+  }, []);
+
+  const { lowCost, highCost } = useMemo(() => {
+    const allCosts = flightsData?.map(a => a.cost);
+
+    console.log(JSON.stringify(allCosts));
+
+    if (allCosts.length > 0) {
+      return {
+        lowCost: allCosts[0],
+        highCost: allCosts[allCosts.length - 1],
+      };
+    } else {
+      return {
+        lowCost: 0,
+        highCost: 0,
+      };
+    }
   }, []);
 
   return (
@@ -223,7 +248,87 @@ export default function FlightSearchBar({ onSearch }) {
           width: '100%',
           display: 'flex',
           justifyContent: 'flex-end',
+          justifyContent: 'space-between',
         }}>
+        <Box
+          flexDirection={'column'}
+          justifyContent={'center'}
+          display={'flex'}>
+          {!showFlights ||
+          lowCost === 0 ||
+          highCost === 0 ? null : !showPriceIndicator ? (
+            <Fragment>
+              <Skeleton animation="wave" height={15} width="320px" />
+              <Skeleton animation="wave" height={20} width="320px" />
+            </Fragment>
+          ) : (
+            <Fragment>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '400px',
+                }}>
+                <Box
+                  sx={{
+                    width: '30%',
+                  }}>
+                  <LinearProgress
+                    variant="determinate"
+                    color="warning"
+                    value={100}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    width: '40%',
+                  }}>
+                  <LinearProgress
+                    variant="determinate"
+                    color="success"
+                    value={100}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    width: '30%',
+                  }}>
+                  <LinearProgress
+                    variant="determinate"
+                    color={'error'}
+                    value={100}
+                  />
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '400px',
+                  justifyContent: 'space-between',
+                }}>
+                <Box
+                  sx={{
+                    width: '30%',
+                  }}>
+                  <Typography variant="caption">
+                    {getCostFormat(lowCost)}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    width: '30%',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}>
+                  <Typography variant="caption">
+                    {getCostFormat(highCost)}
+                  </Typography>
+                </Box>
+              </Box>
+            </Fragment>
+          )}
+        </Box>
         <Box
           sx={{
             display: 'flex',

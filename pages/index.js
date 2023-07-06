@@ -11,16 +11,21 @@ import FlightCard from '../src/FlightCard';
 import FlightsData from '../src/data/searchresponse.json';
 
 export default function Index() {
-  const [showLoading, setShowLoading] = React.useState(false)
-  const [showFlights, setShowFlights] = React.useState(false)
+  const [showLoading, setShowLoading] = React.useState(false);
+  const [showPriceIndicator, setShowPriceIndicator] = React.useState(false);
+  const [showFlights, setShowFlights] = React.useState(false);
 
   const onClickSearch = () => {
     setShowLoading(true);
-    
+
     setTimeout(() => {
       setShowFlights(true);
-    }, 1500)
-  }
+    }, 1500);
+
+    setTimeout(() => {
+      setShowPriceIndicator(true);
+    }, 3000);
+  };
 
   return (
     <Container maxWidth="lg">
@@ -31,21 +36,29 @@ export default function Index() {
           style={{ objectFit: 'cover', objectPosition: 'top' }}
         />
       </Box>
-      <FlightSearchBar onSearch={onClickSearch} />
-      {!showLoading ? null : 
-      <Box display={'flex'} gap={4} flexDirection={'column'} mb={12}>
-        {showFlights ? FlightsData.flightCostings.map((flight, index) => {
-          return <FlightCard data={...flight} index={index} />;
-        }) : <React.Fragment>
-          <FlightCardLoading />
-          <FlightCardLoading />
-          <FlightCardLoading />
-          <FlightCardLoading />
-          <FlightCardLoading />
-        </React.Fragment>
-        }
-      </Box>
-      }
+      <FlightSearchBar
+        onSearch={onClickSearch}
+        showFlights={showFlights}
+        showPriceIndicator={showPriceIndicator}
+        flightsData={FlightsData?.flightCostings}
+      />
+      {!showLoading ? null : (
+        <Box display={'flex'} gap={4} flexDirection={'column'} mb={12}>
+          {showFlights ? (
+            FlightsData.flightCostings.map((flight, index) => {
+              return <FlightCard data={{ ...flight }} index={index} />;
+            })
+          ) : (
+            <React.Fragment>
+              <FlightCardLoading />
+              <FlightCardLoading />
+              <FlightCardLoading />
+              <FlightCardLoading />
+              <FlightCardLoading />
+            </React.Fragment>
+          )}
+        </Box>
+      )}
     </Container>
   );
 }
