@@ -138,7 +138,7 @@ export default function FlightCard({ data, index }) {
               setCurrentFlight(data);
               setOpen(true);
             }}>
-            Freeze Price
+            Hold Price
           </Button>
           <Button
             variant="contained"
@@ -155,7 +155,7 @@ export default function FlightCard({ data, index }) {
 
       <BootstrapDialog open={open} onClose={handleClose}>
         <BootstrapDialogTitle onClose={handleClose}>
-          Freeze Price & Pay Later
+          Hold Price & Pay Later
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <DialogContentText>
