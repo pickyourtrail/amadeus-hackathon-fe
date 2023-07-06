@@ -35,6 +35,12 @@ export default function Index() {
           fill
           style={{ objectFit: 'cover', objectPosition: 'top' }}
         />
+        <Image
+          src={'https://pyt-images.imgix.net/images/web_app/logo/pickyourtrail-logo-white.svg'}
+          width={160}
+          height={28}
+          style={{ objectFit: 'cover', objectPosition: 'top', position: 'absolute', top: 24, left: 24 }}
+        />
       </Box>
       <FlightSearchBar
         onSearch={onClickSearch}
