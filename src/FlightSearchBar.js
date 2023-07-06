@@ -32,12 +32,39 @@ const countries = [
   { code: 'AMS', label: 'Amsterdam' },
 ];
 
+import _CALENDAR_PRICE from '../src/data/latest-price.json';
+import { useMemo } from 'react';
+import dayjs from 'dayjs';
+import getCostFormat from './getCostFormat';
+
 export default function FlightSearchBar({ onSearch }) {
   const [flightSearch, setFlightSearch] = useAtom(flightSearchAtom);
 
   const handleChangeType = event => {
     setFlightSearch({ type: event.target.value });
   };
+
+  const oneWayCalenderPrice = useMemo(() => {
+    const keys = Object.keys(_CALENDAR_PRICE).filter(a => a.includes('_o'));
+
+    const finalList = {};
+    keys.forEach(key => {
+      finalList[key.split('_')[0]] = _CALENDAR_PRICE[key];
+    });
+
+    return finalList;
+  }, []);
+
+  const roundTripCalenderPrice = useMemo(() => {
+    const keys = Object.keys(_CALENDAR_PRICE).filter(a => a.includes('_r'));
+
+    const finalList = {};
+    keys.forEach(key => {
+      finalList[key.split('_')[0]] = _CALENDAR_PRICE[key];
+    });
+
+    return finalList;
+  }, []);
 
   return (
     <Box sx={{ my: 4, gap: '12px', display: 'flex', flexDirection: 'column' }}>
@@ -115,35 +142,15 @@ export default function FlightSearchBar({ onSearch }) {
             disablePast
             label="Depart"
             sx={{ width: '100%' }}
-            showDaysOutsideCurrentMonth={false}
+            showDaysOutsideCurrentMonth={true}
             value={flightSearch?.departDate}
             onChange={newValue => setFlightSearch({ departDate: newValue })}
-            // slots={{
-            //   day: ({ day, outsideCurrentMonth, disabled, ...rest }) => {
-            //     console.log({ day, rest });
-
-            //     return (
-            //       <CustomPickersDay
-            //         {...rest}
-            //         disabled={disabled}
-            //         outsideCurrentMonth={outsideCurrentMonth}>
-            //         <Box
-            //           sx={{
-            //             display: 'flex',
-            //             flexDirection: 'column',
-            //             p: '4px',
-            //           }}>
-            //           <Typography>{day.$D}</Typography>
-            //           {outsideCurrentMonth || disabled ? undefined : (
-            //             <Typography>test</Typography>
-            //           )}
-            //         </Box>
-            //       </CustomPickersDay>
-            //     );
-            //   },
-            // }}
             slots={{
               day: ({ day, outsideCurrentMonth, disabled, ...rest }) => {
+                const formattedDate = dayjs(day.$d).format('YYYY-MM-DD');
+                console.log({ day, rest, formattedDate });
+                const price = oneWayCalenderPrice?.[formattedDate];
+
                 return (
                   <Box
                     sx={{
@@ -157,11 +164,11 @@ export default function FlightSearchBar({ onSearch }) {
                       outsideCurrentMonth={outsideCurrentMonth}
                       day={day}
                     />
-                    {outsideCurrentMonth || disabled ? undefined : (
+                    {(outsideCurrentMonth || disabled) && !price ? undefined : (
                       <Typography
                         variant="caption"
-                        sx={{ fontSize: '10px', color: colors.green[200] }}>
-                        3,000
+                        sx={{ fontSize: '11px', color: colors.green[200] }}>
+                        {price}
                       </Typography>
                     )}
                   </Box>
@@ -172,21 +179,38 @@ export default function FlightSearchBar({ onSearch }) {
         </Grid>
         <Grid item xs={3}>
           <DatePicker
-            disabled={flightSearch.type === 1}
             disablePast
             label="Return"
             sx={{ width: '100%' }}
-            showDaysOutsideCurrentMonth={false}
+            showDaysOutsideCurrentMonth={true}
+            value={flightSearch?.returnDate}
+            onChange={newValue => setFlightSearch({ returnDate: newValue })}
             slots={{
-              day: ({ day, outsideCurrentMonth, ...rest }) => {
+              day: ({ day, outsideCurrentMonth, disabled, ...rest }) => {
+                const formattedDate = dayjs(day.$d).format('YYYY-MM-DD');
+                console.log({ day, rest, formattedDate });
+                const price = oneWayCalenderPrice?.[formattedDate];
+
                 return (
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}>
                     <PickersDay
                       {...rest}
+                      disabled={disabled}
                       outsideCurrentMonth={outsideCurrentMonth}
                       day={day}
                     />
-                    {outsideCurrentMonth ? undefined : 'test'}
+                    {(outsideCurrentMonth || disabled) && !price ? undefined : (
+                      <Typography
+                        variant="caption"
+                        sx={{ fontSize: '11px', color: colors.green[200] }}>
+                        {price}
+                      </Typography>
+                    )}
                   </Box>
                 );
               },
@@ -200,9 +224,19 @@ export default function FlightSearchBar({ onSearch }) {
           display: 'flex',
           justifyContent: 'flex-end',
         }}>
-        <Button size="large" variant="contained" onClick={onSearch}>
-          Search Flights
-        </Button>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+          }}>
+          <Typography variant="caption" color={colors.grey[500]}>
+            All prices are shown in INR
+          </Typography>
+          <Button size="large" variant="contained" onClick={onSearch}>
+            Search Flights
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

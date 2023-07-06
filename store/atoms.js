@@ -8,5 +8,6 @@ export const flightSearchAtom = atom({
   depart: 'BLR',
   arrival: 'AMS',
   departDate: dayjs(new Date()).add(7, 'day'),
+  // returnDate: dayjs(new Date()).add(14, 'day'),
 });
 flightSearchAtom.debugLabel = 'flightSearch';

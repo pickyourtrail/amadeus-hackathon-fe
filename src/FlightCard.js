@@ -17,17 +17,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
-
-function getCostFormat(stringNumber, displayCurrency) {
-  if (!stringNumber) return stringNumber;
-
-  return parseInt(stringNumber, 10)
-    .toLocaleString('en-US', {
-      style: 'currency',
-      currency: displayCurrency ? displayCurrency : 'INR',
-    })
-    .split('.')[0];
-}
+import getCostFormat from './getCostFormat';
 
 const minToHrs = totalMinutes => {
   var hours = Math.floor(totalMinutes / 60);
