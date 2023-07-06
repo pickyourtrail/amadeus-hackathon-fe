@@ -73,20 +73,23 @@ export default function FlightSearchBar({
     return finalList;
   }, []);
 
-  const { lowCost, highCost } = useMemo(() => {
+  const { lowCost, highCost, avgCost } = useMemo(() => {
     const allCosts = flightsData?.map(a => a.cost);
 
-    console.log(JSON.stringify(allCosts));
+    const allCostsValue = allCosts.reduce((acc, cost) => acc + cost, 0);
+    console.log({ allCostsValue, avg: allCostsValue / allCosts.length });
 
     if (allCosts.length > 0) {
       return {
         lowCost: allCosts[0],
         highCost: allCosts[allCosts.length - 1],
+        avgCost: allCostsValue / allCosts.length,
       };
     } else {
       return {
         lowCost: 0,
         highCost: 0,
+        avgCost: 0,
       };
     }
   }, []);
@@ -275,7 +278,7 @@ export default function FlightSearchBar({
                   }}>
                   <LinearProgress
                     variant="determinate"
-                    color="warning"
+                    color="success"
                     value={100}
                   />
                 </Box>
@@ -285,7 +288,7 @@ export default function FlightSearchBar({
                   }}>
                   <LinearProgress
                     variant="determinate"
-                    color="success"
+                    color="warning"
                     value={100}
                   />
                 </Box>
@@ -318,8 +321,28 @@ export default function FlightSearchBar({
                 <Box
                   sx={{
                     width: '30%',
+                    position: 'relative',
+                  }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      position: 'absolute',
+                      backgroundColor: colors.green[100],
+                      width: '15px',
+                      height: '15px',
+                      top: '-10px',
+                      left: '10px',
+                      borderRadius: '50%',
+                    }}
+                  />
+                  <Typography variant="caption">
+                    {getCostFormat(avgCost)}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    width: '30%',
                     display: 'flex',
-                    justifyContent: 'flex-end',
                   }}>
                   <Typography variant="caption">
                     {getCostFormat(highCost)}
