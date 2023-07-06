@@ -8,7 +8,7 @@ import FlightSearchBar from '../src/FlightSearchBar';
 import FlightCardLoading from '../src/FlightCardLoading';
 import FlightCard from '../src/FlightCard';
 
-import FlightsData from '../src/data/searchresponse.json';
+import FlightsData from '../src/data/final.json';
 
 export default function Index() {
   const [showLoading, setShowLoading] = React.useState(false);

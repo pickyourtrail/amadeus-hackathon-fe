@@ -349,6 +349,10 @@ export default function FlightSearchBar({
                   </Typography>
                 </Box>
               </Box>
+              <Typography variant="caption" color={colors.grey[300]}>
+                * The ideal priced flights for this route is around{' '}
+                {getCostFormat(avgCost)}
+              </Typography>
             </Fragment>
           )}
         </Box>
