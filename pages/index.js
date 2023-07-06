@@ -24,7 +24,7 @@ export default function Index() {
 
     setTimeout(() => {
       setShowPriceIndicator(true);
-    }, 3000);
+    }, 5000);
   };
 
   return (

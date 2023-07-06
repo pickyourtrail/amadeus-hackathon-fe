@@ -48,7 +48,7 @@ export default function FlightSearchBar({
   const [flightSearch, setFlightSearch] = useAtom(flightSearchAtom);
 
   const handleChangeType = event => {
-    setFlightSearch({ type: event.target.value });
+    setFlightSearch({ ...flightSearch, type: event.target.value });
   };
 
   const oneWayCalenderPrice = useMemo(() => {
@@ -121,7 +121,9 @@ export default function FlightSearchBar({
             id="demo-select-small"
             value={flightSearch.adults}
             label="Adults"
-            onChange={event => setFlightSearch({ adults: event.target.value })}>
+            onChange={event =>
+              setFlightSearch({ ...flightSearch, adults: event.target.value })
+            }>
             <MenuItem value={1}>1 Adult</MenuItem>
             <MenuItem value={2}>2 Adults</MenuItem>
           </Select>
@@ -172,7 +174,9 @@ export default function FlightSearchBar({
             sx={{ width: '100%' }}
             showDaysOutsideCurrentMonth={true}
             value={flightSearch?.departDate}
-            onChange={newValue => setFlightSearch({ departDate: newValue })}
+            onChange={newValue =>
+              setFlightSearch({ ...flightSearch, departDate: newValue })
+            }
             slots={{
               day: ({ day, outsideCurrentMonth, disabled, ...rest }) => {
                 const formattedDate = dayjs(day.$d).format('YYYY-MM-DD');
@@ -212,7 +216,9 @@ export default function FlightSearchBar({
             sx={{ width: '100%' }}
             showDaysOutsideCurrentMonth={true}
             value={flightSearch?.returnDate}
-            onChange={newValue => setFlightSearch({ returnDate: newValue })}
+            onChange={newValue =>
+              setFlightSearch({ ...flightSearch, returnDate: newValue })
+            }
             slots={{
               day: ({ day, outsideCurrentMonth, disabled, ...rest }) => {
                 const formattedDate = dayjs(day.$d).format('YYYY-MM-DD');
